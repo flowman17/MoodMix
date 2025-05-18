@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
+<!DOCTYPE html><html lang="en"><head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mood Music Recommender</title>
@@ -14,73 +11,77 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      justify-content: flex-start;
+      min-height: 100vh;
+      background-color: orange;
       transition: background-color 0.5s ease;
       color: #fff;
       text-align: center;
-    }
+    }h1 {
+  font-size: 2.5rem;
+  margin: 2rem 0 1rem;
+}
 
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-    }
+select,
+button {
+  padding: 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  margin: 10px;
+}
 
-    select,
-    button {
-      padding: 15px;
-      font-size: 16px;
-      border: none;
-      border-radius: 10px;
-      margin: 10px;
-    }
+select {
+  width: 280px;
+}
 
-    select {
-      width: 280px;
-    }
+button {
+  background-color: #fff;
+  color: #333;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
 
-    button {
-      background-color: #fff;
-      color: #333;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
+button:hover {
+  background-color: #ddd;
+}
 
-    button:hover {
-      background-color: #ddd;
-    }
+.suggestions {
+  margin-top: 2rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 800px;
+}
 
-    .suggestions {
-      margin-top: 2rem;
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 20px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 500px;
-    }
+.suggestions ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
-    .suggestions ul {
-      list-style: none;
-      padding: 0;
-    }
+.suggestions li {
+  margin: 10px;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  border-radius: 8px;
+}
 
-    .suggestions li {
-      margin: 8px 0;
-    }
+a {
+  color: #fff;
+  text-decoration: none;
+}
 
-    a {
-      color: #fff;
-      text-decoration: none;
-    }
+a:hover {
+  text-decoration: underline;
+}
 
-    a:hover {
-      text-decoration: underline;
-    }
   </style>
-</head>
-
-<body>
+</head><body>
   <h1>What's Your Mood?</h1>
   <select id="moodSelector">
     <option value="">-- Select Mood --</option>
@@ -91,9 +92,7 @@
     <option value="nostalgia">Nostalgia</option>
   </select>
   <button onclick="suggestMusic()">Get Music</button>
-  <div class="suggestions" id="musicSuggestions"></div>
-
-  <script>
+  <div class="suggestions" id="musicSuggestions"></div>  <script>
     const moodColors = {
       happy: '#FFD700',
       sad: '#4682B4',
@@ -104,39 +103,39 @@
 
     const moodLibrary = {
       happy: [
-        "https://open.spotify.com/track/60nZcImufyMA1MKQY3dcCH",
-        "https://open.spotify.com/track/5WvAo7DNuPRmk4APhdPzi8",
-        "https://open.spotify.com/track/7fBv7CLKzipRk6EC6TWHOB",
-        // add 27 more Spotify links
+        "Happy - Pharrell Williams|https://open.spotify.com/track/60nZcImufyMA1MKQY3dcCH",
+        "Can't Stop the Feeling - Justin Timberlake|https://open.spotify.com/track/5WvAo7DNuPRmk4APhdPzi8",
+        "Walking on Sunshine - Katrina & The Waves|https://open.spotify.com/track/7fBv7CLKzipRk6EC6TWHOB",
+        // Add more up to 30...
       ],
       sad: [
-        "https://open.spotify.com/track/0HqZX76SFLDz2aW8aiqi7G",
-        "https://open.spotify.com/track/2Fxmhks0bxGSBdJ92vM42m",
-        "https://open.spotify.com/track/5CmVI1jZlJbWLQzI04D5YO",
-        // add 27 more
+        "Someone Like You - Adele|https://open.spotify.com/track/0HqZX76SFLDz2aW8aiqi7G",
+        "everything i wanted - Billie Eilish|https://open.spotify.com/track/2Fxmhks0bxGSBdJ92vM42m",
+        "Stay With Me - Sam Smith|https://open.spotify.com/track/5CmVI1jZlJbWLQzI04D5YO",
+        // Add more up to 30...
       ],
       chill: [
-        "https://open.spotify.com/track/4W2Z6fH7xq9RZ9P8md9eHU",
-        "https://open.spotify.com/track/6QgjcU0zLnzq5OrUoSZ3OK",
-        "https://open.spotify.com/track/1Qrg8KqiBpW07V7PNxwwwL",
-        // add 27 more
+        "Come Away With Me - Norah Jones|https://open.spotify.com/track/4W2Z6fH7xq9RZ9P8md9eHU",
+        "Banana Pancakes - Jack Johnson|https://open.spotify.com/track/6QgjcU0zLnzq5OrUoSZ3OK",
+        "Sunflower - Post Malone|https://open.spotify.com/track/1Qrg8KqiBpW07V7PNxwwwL",
+        // Add more up to 30...
       ],
       motivational: [
-        "https://open.spotify.com/track/1lDWb6b6ieDQ2xT7ewTC3G",
-        "https://open.spotify.com/track/7GhIk7Il098yCjg4BQjzvb",
-        "https://open.spotify.com/track/6zSpb8dQRaw0M1dK8PBwQz",
-        // add 27 more
+        "Stronger - Kanye West|https://open.spotify.com/track/1lDWb6b6ieDQ2xT7ewTC3G",
+        "Eye of the Tiger - Survivor|https://open.spotify.com/track/7GhIk7Il098yCjg4BQjzvb",
+        "Believer - Imagine Dragons|https://open.spotify.com/track/6zSpb8dQRaw0M1dK8PBwQz",
+        // Add more up to 30...
       ],
       nostalgia: [
-        "https://open.spotify.com/track/6YvqWjhGD8mB5QXcbcUKtx",
-        "https://open.spotify.com/track/1xzi1Jcr7mEi9K2RfzLOqS",
-        "https://open.spotify.com/track/2U5V3d4RzGHCy7i43GZniY",
-        // add 27 more
+        "Bohemian Rhapsody - Queen|https://open.spotify.com/track/6YvqWjhGD8mB5QXcbcUKtx",
+        "Wonderwall - Oasis|https://open.spotify.com/track/1xzi1Jcr7mEi9K2RfzLOqS",
+        "Summer of '69 - Bryan Adams|https://open.spotify.com/track/2U5V3d4RzGHCy7i43GZniY",
+        // Add more up to 30...
       ]
     };
 
     function suggestMusic() {
-      const mood = document.getElementById('moodSelector').value;
+      const mood = document.getElementById('moodSelector').value.toLowerCase();
       const suggestionBox = document.getElementById('musicSuggestions');
 
       if (!mood) {
@@ -149,13 +148,13 @@
       const songs = moodLibrary[mood];
       if (songs && songs.length) {
         suggestionBox.innerHTML = `<h2>Songs for ${mood.charAt(0).toUpperCase() + mood.slice(1)} Mood:</h2><ul>` +
-          songs.map(song => `<li><a href="${song}" target="_blank">Play on Spotify</a></li>`).join('') +
+          songs.map(song => {
+            const [name, url] = song.split('|');
+            return `<li><strong>${name}</strong><br><a href="${url}" target="_blank">Open on Spotify</a></li>`;
+          }).join('') +
           '</ul>';
       } else {
         suggestionBox.innerHTML = '<p>No songs found for this mood.</p>';
       }
     }
-  </script>
-</body>
-
-</html>
+  </script></body></html>
