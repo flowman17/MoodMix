@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mood Music Recommender</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      text-align: center;
       margin: 0;
       padding: 0;
       display: flex;
@@ -16,33 +16,34 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      transition: background 0.5s;
+      transition: background-color 0.5s ease;
+      color: #fff;
+      text-align: center;
     }
 
     h1 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
-      color: #fff;
     }
 
-    input {
+    select,
+    button {
       padding: 15px;
       font-size: 16px;
-      width: 280px;
       border: none;
       border-radius: 10px;
-      margin-bottom: 1rem;
+      margin: 10px;
+    }
+
+    select {
+      width: 280px;
     }
 
     button {
-      padding: 15px 30px;
-      font-size: 16px;
       background-color: #fff;
       color: #333;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
       font-weight: bold;
+      cursor: pointer;
       transition: background-color 0.3s;
     }
 
@@ -57,7 +58,6 @@
       border-radius: 10px;
       width: 90%;
       max-width: 500px;
-      color: #fff;
     }
 
     .suggestions ul {
@@ -69,66 +69,93 @@
       margin: 8px 0;
     }
 
-    .suggestions a {
+    a {
       color: #fff;
+      text-decoration: none;
+    }
+
+    a:hover {
       text-decoration: underline;
     }
   </style>
 </head>
+
 <body>
   <h1>What's Your Mood?</h1>
-  <input type="text" id="moodInput" placeholder="Type your mood..." />
+  <select id="moodSelector">
+    <option value="">-- Select Mood --</option>
+    <option value="happy">Happy</option>
+    <option value="sad">Sad</option>
+    <option value="chill">Chill</option>
+    <option value="motivational">Motivational</option>
+    <option value="nostalgia">Nostalgia</option>
+  </select>
   <button onclick="suggestMusic()">Get Music</button>
   <div class="suggestions" id="musicSuggestions"></div>
 
   <script>
+    const moodColors = {
+      happy: '#FFD700',
+      sad: '#4682B4',
+      chill: '#98FB98',
+      motivational: '#DC143C',
+      nostalgia: '#A9A9A9'
+    };
+
     const moodLibrary = {
       happy: [
-        { title: "Happy - Pharrell Williams", url: "https://open.spotify.com/track/60nZcImufyMA1MKQY3dcCH" },
-        { title: "Uptown Funk - Mark Ronson ft. Bruno Mars", url: "https://open.spotify.com/track/32OlwWuMpZ6b0aN2RZOeMS" },
-        // Add 28 more here
+        "https://open.spotify.com/track/60nZcImufyMA1MKQY3dcCH",
+        "https://open.spotify.com/track/5WvAo7DNuPRmk4APhdPzi8",
+        "https://open.spotify.com/track/7fBv7CLKzipRk6EC6TWHOB",
+        // add 27 more Spotify links
       ],
       sad: [
-        { title: "Someone Like You - Adele", url: "https://open.spotify.com/track/4kflIGfjdZJW4ot2ioixTB" },
-        // Add 29 more
+        "https://open.spotify.com/track/0HqZX76SFLDz2aW8aiqi7G",
+        "https://open.spotify.com/track/2Fxmhks0bxGSBdJ92vM42m",
+        "https://open.spotify.com/track/5CmVI1jZlJbWLQzI04D5YO",
+        // add 27 more
       ],
       chill: [
-        { title: "Night Drive - Ari Lennox", url: "https://open.spotify.com/track/2Qv4uDvdohJpCjMkeU6R5R" },
-        // Add 29 more
+        "https://open.spotify.com/track/4W2Z6fH7xq9RZ9P8md9eHU",
+        "https://open.spotify.com/track/6QgjcU0zLnzq5OrUoSZ3OK",
+        "https://open.spotify.com/track/1Qrg8KqiBpW07V7PNxwwwL",
+        // add 27 more
       ],
       motivational: [
-        { title: "Stronger - Kanye West", url: "https://open.spotify.com/track/5tVA6TkbaAH9QMITTQRrNv" },
-        // Add 29 more
+        "https://open.spotify.com/track/1lDWb6b6ieDQ2xT7ewTC3G",
+        "https://open.spotify.com/track/7GhIk7Il098yCjg4BQjzvb",
+        "https://open.spotify.com/track/6zSpb8dQRaw0M1dK8PBwQz",
+        // add 27 more
       ],
       nostalgia: [
-        { title: "Summer of '69 - Bryan Adams", url: "https://open.spotify.com/track/3G69pLppihISnyb0yRmrZV" },
-        // Add 29 more
+        "https://open.spotify.com/track/6YvqWjhGD8mB5QXcbcUKtx",
+        "https://open.spotify.com/track/1xzi1Jcr7mEi9K2RfzLOqS",
+        "https://open.spotify.com/track/2U5V3d4RzGHCy7i43GZniY",
+        // add 27 more
       ]
     };
 
-    const moodColors = {
-      happy: "#FFD700",
-      sad: "#4682B4",
-      chill: "#98FB98",
-      motivational: "#FF6347",
-      nostalgia: "#A9A9A9"
-    };
-
     function suggestMusic() {
-      const moodInput = document.getElementById('moodInput').value.trim().toLowerCase();
-      const suggestionsBox = document.getElementById('musicSuggestions');
+      const mood = document.getElementById('moodSelector').value;
+      const suggestionBox = document.getElementById('musicSuggestions');
 
-      if (moodLibrary[moodInput]) {
-        const songs = moodLibrary[moodInput];
-        const listHTML = songs.map(song => `<li><a href="${song.url}" target="_blank">${song.title}</a></li>`).join('');
-        suggestionsBox.innerHTML = `<h2>Suggested Songs:</h2><ul>${listHTML}</ul>`;
+      if (!mood) {
+        suggestionBox.innerHTML = '<p>Please select a mood.</p>';
+        return;
+      }
 
-        document.body.style.background = moodColors[moodInput] || "#333";
+      document.body.style.backgroundColor = moodColors[mood];
+
+      const songs = moodLibrary[mood];
+      if (songs && songs.length) {
+        suggestionBox.innerHTML = `<h2>Songs for ${mood.charAt(0).toUpperCase() + mood.slice(1)} Mood:</h2><ul>` +
+          songs.map(song => `<li><a href="${song}" target="_blank">Play on Spotify</a></li>`).join('') +
+          '</ul>';
       } else {
-        suggestionsBox.innerHTML = "<p>Sorry, no suggestions for that mood. Try: happy, sad, chill, motivational, nostalgia.</p>";
-        document.body.style.background = "#333";
+        suggestionBox.innerHTML = '<p>No songs found for this mood.</p>';
       }
     }
   </script>
 </body>
+
 </html>
