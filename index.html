@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mood Music Recommender</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      transition: background-color 0.5s ease;
+      background-color: #222; /* default premium dark */
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      user-select: none;
+    }
+    input {
+      padding: 15px;
+      font-size: 16px;
+      width: 280px;
+      border: none;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      outline: none;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 16px;
+      background-color: #fff;
+      color: #333;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #ddd;
+    }
+    .suggestions {
+      margin-top: 2rem;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 600px;
+      max-height: 400px;
+      overflow-y: auto;
+      text-align: left;
+    }
+    .suggestions ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .suggestions li {
+      margin: 8px 0;
+    }
+    .suggestions a {
+      color: #fff;
+      text-decoration: none;
+    }
+    .suggestions a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 400px) {
+      input {
+        width: 90vw;
+      }
+      .suggestions {
+        width: 90vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>What's Your Mood?</h1>
+  <input type="text" id="moodInput" placeholder="Type your mood (e.g., happy)" autocomplete="off" />
+  <br />
+  <button onclick="suggestMusic()">Get Music</button>
+  <div class="suggestions" id="musicSuggestions"></div>
+
+  <script>
+    // Define moods and colors
+    const moodColors = {
+      happy: '#f7dc6f',        // yellow
+      sad: '#3498db',          // blue
+      chill: '#a9dfbf',        // pastel green
+      motivational: '#e74c3c', // red
+      nostalgia: '#95a5a6'     // grey
+    };
+
+    // Songs array per mood, 30 songs each with name and Spotify URL
+    const moodLibrary = {
+      happy: [
+        {name: "Pharrell Williams - Happy", url:"https://open.spotify.com/track/60nZcImufyMA1MKQY3dcCH"},
+        {name: "Justin Timberlake - Can't Stop The Feeling", url:"https://open.spotify.com/track/6JV2JOEocMgcZxYSZelKcc"},
+        {name: "Katrina & The Waves - Walking on Sunshine", url:"https://open.spotify.com/track/5qGVMkXoBjK9moJj8Q8jQx"},
+        {name: "ABBA - Dancing Queen", url:"https://open.spotify.com/track/0GjEhVFGZW8afUYGChu3Rr"},
+        {name: "BTS - Dynamite", url:"https://open.spotify.com/track/2N3W8FDq3oV9zT0Vn1pJ3v"},
+        {name: "Shakira - Waka Waka", url:"https://open.spotify.com/track/5f9dUQEKWBr4KzTy9Rx8cn"},
+        {name: "Coldplay - Adventure of a Lifetime", url:"https://open.spotify.com/track/6EPRjpkH6KwvxXxzM6SHTM"},
+        {name: "Maroon 5 - Sugar", url:"https://open.spotify.com/track/6rPO02ozF3bM7NnOV4h6s2"},
+        {name: "Taylor Swift - Shake It Off", url:"https://open.spotify.com/track/5W3cjX2J3tjhG8zb6u0qHn"},
+        {name: "Katy Perry - Firework", url:"https://open.spotify.com/track/6KK3c3qxo8uU76NENvmsnN"},
+        {name: "A.R. Rahman - Jai Ho", url:"https://open.spotify.com/track/7kjqokSOXKzpOzlgNoIgqA"},
+        {name: "Neha Kakkar - Kala Chashma", url:"https://open.spotify.com/track/3SVDPTi4DyD9yYjR9ZQhwT"},
+        {name: "Badshah - DJ Waley Babu", url:"https://open.spotify.com/track/1VZ9nUzAdY6XKOauWUMpIy"},
+        {name: "Arijit Singh - Nashe Si Chadh Gayi", url:"https://open.spotify.com/track/2wY79sveU1sp5g7SokKOiI"},
+        {name: "Uptown Funk - Mark Ronson ft. Bruno Mars", url:"https://open.spotify.com/track/32OlwWuMpZ6b0aN2RZOeMS"},
+        {name: "DNCE - Cake By The Ocean", url:"https://open.spotify.com/track/1Lv6MdTIT17fzLsR2Q6YZO"},
+        {name: "Jason Mraz - I'm Yours", url:"https://open.spotify.com/track/3U4isOIWM3VvDubwSI3y7a"},
+        {name: "Bruno Mars - Treasure", url:"https://open.spotify.com/track/3QZ7ZhepccNj2eZXI8e8XH"},
+        {name: "Mika - Grace Kelly", url:"https://open.spotify.com/track/2tUBqZG2AbRi7Q0BIrVrEj"},
+        {name: "Pharrell Williams - Freedom", url:"https://open.spotify.com/track/5nV8MhvAk1Cx60FHP6i5H8"}
+      ],
+      sad: [
+        {name: "Adele - Someone Like You", url:"https://open.spotify.com/track/4kflIGfjdZJW4ot2ioixTB"},
+        {name: "Billie Eilish - everything i wanted", url:"https://open.spotify.com/track/6p2r7Z9v6vWtF7B7Ei6wxY"},
+        {name: "Sam Smith - Stay With Me", url:"https://open.spotify.com/track/5mCPD94fL5iz7HCakqQe5r"},
+        {name: "Coldplay - Fix You", url:"https://open.spotify.com/track/0Rx0AS8EmCofU1bFGqFZgi"},
+        {name: "Lewis Capaldi - Someone You Loved", url:"https://open.spotify.com/track/7qEHsqek33rTcFNT9PFqLf"},
+        {name: "Arijit Singh - Channa Mereya", url:"https://open.spotify.com/track/6Cd8eIK9l6l6F8u2ik6pAb"},
+        {name: "Ed Sheeran - Photograph", url:"https://open.spotify.com/track/3T4tUhGYeRNVUGevb0wThu"},
+        {name: "Khalid - Better", url:"https://open.spotify.com/track/2a7Vb3tHq5kAgKmE7wFZAt"},
+        {name: "The Weeknd - Call Out My Name", url:"https://open.spotify.com/track/3Q4QeCnxA9m61JUL0aUewU"},
+        {name: "Taylor Swift - All Too Well", url:"https://open.spotify.com/track/4NQZZQJZ8I9V3GlMPQ4lyp"},
+        {name: "A.R. Rahman - Tere Bina", url:"https://open.spotify.com/track/6ETUFeTrwVbSpN3vJw6xMi"},
+        {name: "Shreya Ghoshal - Tujh Mein Rab Dikhta Hai", url:"https://open.spotify.com/track/3hvVJxpRX8h1k1PAr2cUOI"},
+        {name: "Bon Iver - Skinny Love", url:"https://open.spotify.com/track/0kuyP1JfR1Q9qpY98Ys7ka"},
+        {name: "James Blunt - Goodbye My Lover", url:"https://open.spotify.com/track/7y58ZrM6mIN2A6kFm8sjWi"},
+        {name: "Billie Eilish - When The Party's Over", url:"https://open.spotify.com/track/3G1uDt6bCcqQwpuN2BOC3Z"},
+        {name: "Coldplay - The Scientist", url:"https://open.spotify.com/track/75JFxkI2RXiU7L9VXzMkle"},
+        {name: "Arijit Singh - Tum Hi Ho", url:"https://open.spotify.com/track/7leQpZzqP0UaXPRyLTPb1
